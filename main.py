@@ -71,7 +71,7 @@ def load_settings(env):
     shape = get("OCI_COMPUTE_SHAPE", ARM_SHAPE)
     arm = shape == ARM_SHAPE
     try:
-        return SimpleNamespace(
+        s = SimpleNamespace(
             oci_config=get("OCI_CONFIG", "~/.oci/config"),
             ad_suffixes=[a.strip() for a in get("OCT_FREE_AD", "AD-1").split(",") if a.strip()],
             display_name=get("DISPLAY_NAME", "free-instance"),
@@ -100,6 +100,9 @@ def load_settings(env):
         )
     except ValueError as err:
         raise ConfigError(f"oci.env has a value that is not a number: {err}") from err
+    if s.wait_secs < 1:  # 0 would hammer the API and get the account throttled
+        raise ConfigError("REQUEST_WAIT_TIME_SECS must be at least 1 (60 recommended).")
+    return s
 
 
 # --------------------------------------------------------------------------- Always Free check
@@ -357,10 +360,15 @@ def notify_on_failure(settings, failure_msg):
 # --------------------------------------------------------------------------- launch
 
 def find_existing(settings, instances, states=("RUNNING", "PROVISIONING")):
-    """The instance that means "we are done" for this shape, or None."""
+    """The instance that means "we are done" for this shape, or None.
+
+    PROVISIONING counts too, so a restart mid-provisioning does not launch a second one.
+    """
     matching = [i for i in instances if i.shape == settings.shape and i.lifecycle_state in states]
     if settings.shape == ARM_SHAPE:
-        return matching[0] if matching else None
+        # only ours: another A1 (e.g. a first 2/12 when asking for a second one) is not success
+        mine = [i for i in matching if i.display_name == settings.display_name]
+        return mine[0] if mine else None
     wanted = 2 if settings.second_micro else 1
     return matching[-1] if len(matching) >= wanted else None
 
@@ -396,7 +404,7 @@ def find_image(settings, clients, tenancy):
     shortened = [{key: json.loads(str(image))[key] for key in IMAGE_LIST_KEYS} for image in images]
     with open("images_list.json", "w", encoding="utf-8") as f:
         json.dump(shortened, f, indent=2)
-    for image in images:  # OCI returns newest first
+    for image in sorted(images, key=lambda i: i.time_created, reverse=True):  # newest first
         if (image.operating_system == settings.operating_system
                 and image.operating_system_version == settings.os_version):
             return image.id
@@ -425,7 +433,7 @@ def launch_details(settings, ad_name, tenancy, subnet_id, image_id, ssh_public_k
         shape=settings.shape,
         availability_config=models.LaunchInstanceAvailabilityConfigDetails(
             recovery_action="RESTORE_INSTANCE"),
-        instance_options=models.InstanceOptions(are_legacy_imds_endpoints_disabled=False),
+        instance_options=models.InstanceOptions(are_legacy_imds_endpoints_disabled=True),
         shape_config=models.LaunchInstanceShapeConfigDetails(
             ocpus=settings.ocpus, memory_in_gbs=settings.memory_gb),
         source_details=models.InstanceSourceViaImageDetails(
@@ -498,6 +506,10 @@ def launch_instance(settings, clients, tenancy):
                 if check_instance_state_and_write(settings, clients, tenancy,
                                                   summary=elapsed_summary(start, attempts)):
                     return
+                # safety_check already ruled out a real overuse, so this is Oracle's false positive
+                log.info("LimitExceeded but no instance yet, retrying")
+                time.sleep(WAIT_TIME)
+                continue
             handle_errors("launch_instance", _error_data(err))
         except oci.exceptions.RequestException as err:
             handle_errors("launch_instance", _error_data(err))

@@ -23,7 +23,8 @@ Common errors and how to fix them.
 
 **Fix checklist:**
 1. Log into the [OCI Console](https://cloud.oracle.com) → Compute → Instances. Check if an ARM instance already exists.
-2. If it does, the script should detect it and stop. If it already stopped, check `INSTANCE_CREATED`.
+2. If an instance named like your `DISPLAY_NAME` exists, the script detects it and stops (see `INSTANCE_CREATED`).
+   Otherwise it treats `LimitExceeded` as temporary and keeps retrying, because the Always Free check already ran.
 3. If no instance exists, go to **Governance → Limits, Quotas and Usage** and look at `Block Volume` and `Compute` limits.
 4. Delete unused boot volumes to free up storage if needed.
 

@@ -160,8 +160,9 @@ know what to expect.
 
 ### `LimitExceeded`?
 
-You already have something using the quota. The launcher checks whether your instance was
-created; otherwise look in the console (stopped instances still count).
+Before launching, the launcher already checks that your request fits in Always Free, so a
+`LimitExceeded` during the retries is usually a false alarm from Oracle: it checks whether your instance
+was created and, if not, keeps retrying. If it never stops, look in the console (stopped instances still count).
 
 ### Does `resize` lose data?
 

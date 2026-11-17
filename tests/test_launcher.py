@@ -31,7 +31,7 @@ def capacity_error():
 
 
 def settings(**overrides):
-    s = main.load_settings({"DESKTOP_NOTIFY": "false", "REQUEST_WAIT_TIME_SECS": "0"})
+    s = main.load_settings({"DESKTOP_NOTIFY": "false"})  # time.sleep is patched in InTempDir
     vars(s).update(overrides)
     return s
 
@@ -74,6 +74,11 @@ class SettingsTest(unittest.TestCase):
     def test_bad_number_is_config_error(self):
         with self.assertRaises(main.ConfigError):
             main.load_settings({"OCPUS": "four"})
+
+    def test_wait_time_must_be_positive(self):
+        self.assertEqual(main.load_settings({}).wait_secs, 60)
+        with self.assertRaises(main.ConfigError):
+            main.load_settings({"REQUEST_WAIT_TIME_SECS": "0"})
 
 
 class FreeTierTest(unittest.TestCase):
@@ -207,6 +212,33 @@ class LaunchTest(InTempDir):
         self.assertIn("OCI instance created", notify.call_args[0][1])
         self.assertIn("Shape: VM.Standard.A1.Flex", Path("INSTANCE_CREATED").read_text())
         self.assertIn("and 3 attempts.", notify.call_args[0][2])
+        self.assertTrue(details.instance_options.are_legacy_imds_endpoints_disabled)
+
+    def test_other_a1_is_not_success(self):
+        other = inst(name="my-first-a1")  # 2/12 already in use; asking for a second 2/12
+        fake = FakeOci([[other], [other], [other, inst(id="i2")]], subnets=[subnet("sub")],
+                       launch_effects=[SimpleNamespace(status=200)])
+        with mock.patch.object(main, "notify"):
+            main.launch_instance(self.s(), fake, "t")
+        fake.compute.launch_instance.assert_called_once()
+
+    def test_limit_exceeded_keeps_retrying(self):
+        limit = oci.exceptions.ServiceError(400, "LimitExceeded", {}, "Out of A1 quota")
+        fake = FakeOci([[], [], [], [], [], [inst()]], subnets=[subnet("sub")],
+                       launch_effects=[limit, SimpleNamespace(status=200)])
+        with mock.patch.object(main, "notify"):
+            main.launch_instance(self.s(), fake, "t")
+        self.assertEqual(fake.compute.launch_instance.call_count, 2)
+
+    def test_picks_newest_image(self):
+        def image(id, created):
+            return SimpleNamespace(id=id, operating_system="Canonical Ubuntu", operating_system_version="22.04",
+                                   time_created=created, display_name=id, size_in_mbs=1)
+        fake = FakeOci([])
+        fake.compute.list_images.return_value = SimpleNamespace(
+            data=[image("old", "2025-01-01"), image("new", "2026-06-01")])
+        with mock.patch.object(main.json, "loads", return_value={k: "" for k in main.IMAGE_LIST_KEYS}):
+            self.assertEqual(main.find_image(settings(), fake, "t"), "new")
 
     def test_elapsed_summary(self):
         self.assertEqual(main.elapsed_summary(100, 791, now=100 + 13 * 3600 + 27 * 60 + 59),
