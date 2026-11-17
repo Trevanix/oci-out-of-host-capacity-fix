@@ -7,7 +7,7 @@ until Oracle has room — on **Windows, Linux or macOS** — and pops up a messa
 > Fork of [mohankumarpaluru/oracle-freetier-instance-creation](https://github.com/mohankumarpaluru/oracle-freetier-instance-creation)
 > (MIT, © 2023 Mohan Kumar Paluru). Thank you for the original work!
 
-**[Website](https://leandromarin18.github.io/oci-out-of-host-capacity-fix/)** · **[Español más abajo](#español)**
+**[Website](https://northbit-labs.github.io/oci-out-of-host-capacity-fix/)** · **[Español más abajo](#español)**
 
 ## What's new compared to the original
 
@@ -50,7 +50,7 @@ until Oracle has room — on **Windows, Linux or macOS** — and pops up a messa
 ## Quick start — Linux / macOS
 
 ```bash
-git clone https://github.com/leandromarin18/oci-out-of-host-capacity-fix && cd oci-out-of-host-capacity-fix
+git clone https://github.com/northbit-labs/oci-out-of-host-capacity-fix && cd oci-out-of-host-capacity-fix
 python3.12 -m venv .venv && . .venv/bin/activate
 pip install -r requirements.txt
 python setup_wizard.py
