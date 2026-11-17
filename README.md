@@ -4,7 +4,6 @@
 
 <p>
   <a href="https://github.com/northbit-labs/oci-out-of-host-capacity-fix/actions/workflows/tests.yml"><img src="https://github.com/northbit-labs/oci-out-of-host-capacity-fix/actions/workflows/tests.yml/badge.svg" alt="tests"></a>
-  <a href="https://github.com/northbit-labs/oci-out-of-host-capacity-fix/stargazers"><img src="https://img.shields.io/github/stars/northbit-labs/oci-out-of-host-capacity-fix?style=flat&color=ff7a5c&labelColor=141418&label=stars" alt="GitHub stars"></a>
   <img src="https://img.shields.io/badge/python-3.11%20%C2%B7%203.12%20%C2%B7%203.13-ff7a5c?labelColor=141418" alt="Python 3.11, 3.12, 3.13">
   <img src="https://img.shields.io/badge/runs%20on-Windows%20%C2%B7%20Linux%20%C2%B7%20macOS-ff7a5c?labelColor=141418" alt="Windows, Linux, macOS">
   <img src="https://img.shields.io/badge/cost-%240%20%C2%B7%20Always%20Free%20only-5fd38d?labelColor=141418" alt="Only Always Free resources">
