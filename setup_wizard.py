@@ -149,7 +149,7 @@ def main():
         print(f"Created the API key {API_KEY.name} (fingerprint {fp}).")
     print("\nUpload its PUBLIC part to Oracle Cloud:\n"
           "  1. Open https://cloud.oracle.com and sign in.\n"
-          "  2. Profile icon (top right) > My profile > API keys > Add API key.\n"
+          "  2. Profile icon (top right) > User settings > Tokens and keys > Add API key.\n"
           "  3. Choose 'Paste a public key' and paste this:\n")
     print(API_PUBLIC_KEY.read_text(encoding="utf-8"))
     print("  4. Click Add. Oracle shows a 'Configuration file preview'.\n")

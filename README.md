@@ -65,10 +65,26 @@ The original bash scripts (`setup_env.sh`, `setup_init.sh`) are still included a
 `python setup_wizard.py` asks a few questions and writes everything. Nothing is sent anywhere.
 
 1. It creates an **API key** (`oci_api_key.pem` + `oci_api_key_public.pem`) and prints the public part.
-2. In the [OCI console](https://cloud.oracle.com): **profile icon (top right) → My profile → API keys →
+2. In the [OCI console](https://cloud.oracle.com): **profile icon (top right) → User settings → Tokens and keys →
    Add API key → Paste a public key**, paste it, click **Add**.
 3. Oracle shows a **Configuration file preview**. Copy it and paste it into the wizard
    (it reads `user`, `tenancy`, `region` and checks the `fingerprint` matches the key it created).
+
+<details>
+<summary><b>Screenshots of steps 2 and 3</b> (personal data blacked out)</summary>
+
+1. Profile icon → **User settings**
+   ![Profile menu](docs/screenshots/1-profile-menu.png)
+2. **Tokens and keys** tab → **Add API key**
+   ![Tokens and keys](docs/screenshots/2-tokens-and-keys.png)
+3. Choose **Paste a public key**
+   ![Add API key](docs/screenshots/3-add-api-key.png)
+4. Paste the public key the wizard printed and click **Add**
+   ![Paste the public key](docs/screenshots/4-paste-public-key.png)
+5. Copy the **Configuration file preview** into the wizard
+   ![Configuration file preview](docs/screenshots/5-config-preview.png)
+
+</details>
 4. Choose the shape, OCPUs/RAM (checked against Always Free), disk, Ubuntu version and optional notifications.
 5. It creates an **SSH key** (`ssh_key` / `ssh_key.pub`) to log in to the server later:
    `ssh -i ssh_key ubuntu@<public IP>`.
@@ -200,8 +216,8 @@ Basado en [mohankumarpaluru/oracle-freetier-instance-creation](https://github.co
    powershell -ExecutionPolicy Bypass -File setup_windows.ps1
    ```
 4. El asistente te muestra una llave pública. En la [consola de OCI](https://cloud.oracle.com):
-   **icono de perfil (arriba a la derecha) → Mi perfil → Claves API → Agregar clave API → Pegar una clave pública**,
-   pégala y pulsa **Agregar**. Oracle muestra una **vista previa del archivo de configuración**: cópiala y pégala en el asistente.
+   **icono de perfil (arriba a la derecha) → User settings → Tokens and keys → Add API key → Paste a public key**,
+   pégala y pulsa **Add**. Oracle muestra una **vista previa del archivo de configuración**: cópiala y pégala en el asistente.
 5. Elige forma, OCPU/RAM, disco, versión de Ubuntu y avisos opcionales.
 6. Arráncalo en segundo plano:
    ```powershell
