@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fix "Out of host capacity" – Oracle Cloud Free Tier ARM VPS</title>
+<meta name="description" content="Get a free Oracle Cloud ARM VPS (Ampere A1, 4 OCPU / 24 GB RAM) despite &quot;Out of host capacity&quot;. Open-source launcher that retries every minute on Windows, Linux and macOS.">
+<link rel="canonical" href="https://leandromarin18.github.io/oci-out-of-host-capacity-fix/">
+<link rel="alternate" hreflang="en" href="https://leandromarin18.github.io/oci-out-of-host-capacity-fix/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Fix &quot;Out of host capacity&quot; on Oracle Cloud Free Tier">
+<meta property="og:description" content="Free ARM VPS, 4 OCPU / 24 GB RAM. This launcher retries until Oracle has room, then notifies you.">
+<meta property="og:url" content="https://leandromarin18.github.io/oci-out-of-host-capacity-fix/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "oci-out-of-host-capacity-fix",
+  "description": "Open-source launcher that retries Oracle Cloud Always Free ARM (Ampere A1) instance creation until \"Out of host capacity\" clears.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Windows, Linux, macOS",
+  "license": "https://opensource.org/licenses/MIT",
+  "codeRepository": "https://github.com/leandromarin18/oci-out-of-host-capacity-fix",
+  "url": "https://leandromarin18.github.io/oci-out-of-host-capacity-fix/",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+<style>
+:root{--bg:#fbfaf7;--fg:#1d1d1b;--muted:#5d5c57;--card:#fff;--line:#e4e1d8;--accent:#c74634;--code:#f1efe8}
+@media (prefers-color-scheme:dark){:root{--bg:#16161a;--fg:#ececea;--muted:#a3a29c;--card:#1f1f24;--line:#2f2f36;--accent:#ff7a5c;--code:#26262c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:760px;margin:0 auto;padding:48px 16px 64px}
+h1{font-size:clamp(30px,6vw,44px);line-height:1.15;margin:0 0 16px;letter-spacing:-.02em}
+h2{font-size:24px;margin:48px 0 12px}
+h3{font-size:18px;margin:24px 0 4px}
+p,li{color:var(--muted)}
+strong{color:var(--fg)}
+a{color:var(--accent)}
+code,pre{font:14px/1.5 ui-monospace,Consolas,monospace;background:var(--code);border-radius:6px}
+code{padding:2px 5px}
+pre{padding:14px 16px;overflow-x:auto;border:1px solid var(--line)}
+.tag{display:inline-block;font-size:13px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin:28px 0}
+.btn{display:inline-block;padding:12px 20px;border-radius:8px;font-weight:600;text-decoration:none;border:1px solid var(--line);color:var(--fg);background:var(--card)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.card strong{display:block;margin-bottom:4px}
+.card p{margin:0;font-size:15px}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+  <span class="tag">Oracle Cloud Always Free</span>
+  <h1>Fix "Out of host capacity" and get a free ARM VPS on Oracle Cloud</h1>
+  <p>Oracle's Always Free tier gives you an <strong>Ampere A1 ARM server with up to 4 OCPU and 24 GB RAM</strong>,
+  but the console usually answers <strong>"Out of host capacity"</strong>. This open-source launcher retries for you
+  every minute until Oracle has room, then notifies you. It works on <strong>Windows, Linux and macOS</strong>.</p>
+  <div class="cta">
+    <a class="btn primary" href="https://github.com/leandromarin18/oci-out-of-host-capacity-fix">View on GitHub</a>
+    <a class="btn" href="https://github.com/leandromarin18/oci-out-of-host-capacity-fix/archive/refs/heads/main.zip">Download ZIP</a>
+  </div>
+
+  <h2>What it does</h2>
+  <div class="grid">
+    <div class="card"><strong>Retries automatically</strong><p>Keeps asking for capacity, rotating availability domains, until the instance exists.</p></div>
+    <div class="card"><strong>Never leaves Always Free</strong><p>Refuses any request above the free limits: OCPU, RAM, 2 micros, 200 GB storage.</p></div>
+    <div class="card"><strong>Setup wizard</strong><p>Creates the API key, SSH key, <code>oci_config</code> and <code>oci.env</code> for you.</p></div>
+    <div class="card"><strong>Notifies you</strong><p>Desktop pop-up, plus optional Telegram, Discord or Gmail.</p></div>
+    <div class="card"><strong>Start small, grow later</strong><p>Get 2 OCPU / 12 GB first, then <code>resize</code> to 4 / 24.</p></div>
+    <div class="card"><strong>Creates the network</strong><p>Uses a public subnet, or builds VCN, gateway, route and subnet (free).</p></div>
+  </div>
+
+  <h2>Quick start</h2>
+  <p>You need an Oracle Cloud account and Python 3.12 (3.11 and 3.13 also work).</p>
+  <h3>Windows</h3>
+<pre><code>powershell -ExecutionPolicy Bypass -File setup_windows.ps1
+powershell -ExecutionPolicy Bypass -File start_windows.ps1</code></pre>
+  <h3>Linux / macOS</h3>
+<pre><code>git clone https://github.com/leandromarin18/oci-out-of-host-capacity-fix
+cd oci-out-of-host-capacity-fix
+python3.12 -m venv .venv &amp;&amp; . .venv/bin/activate
+pip install -r requirements.txt
+python setup_wizard.py
+python main.py check
+nohup python main.py &gt; python_error.log 2&gt;&amp;1 &amp;</code></pre>
+
+  <h2>FAQ</h2>
+  <h3>How do I fix "Out of host capacity" on Oracle Cloud Free Tier?</h3>
+  <p>You can't fix it on Oracle's side: the region has no free A1 capacity right now. The workaround is to keep
+  retrying until a slot opens, which is what this launcher does. Asking for 2 OCPU / 12 GB first usually gets you a server sooner.</p>
+  <h3>Is it really free?</h3>
+  <p>Yes, within the Always Free allowance: 3,000 OCPU-hours and 18,000 GB-hours of A1 per month (exactly 4 OCPU / 24 GB running 24/7)
+  plus 200 GB of block storage. Oracle's cost estimator shows a price because it does not subtract the free allowance.</p>
+  <h3>How long does it take?</h3>
+  <p>It depends on the region. In busy regions it can take hours or days, so the computer running the launcher must stay on.</p>
+  <h3>¿Está en español?</h3>
+  <p>Sí. La guía completa en español está en el <a href="https://github.com/leandromarin18/oci-out-of-host-capacity-fix#español">README</a>.</p>
+
+  <footer>
+    MIT licensed. Based on <a href="https://github.com/mohankumarpaluru/oracle-freetier-instance-creation">mohankumarpaluru/oracle-freetier-instance-creation</a>.
+    Not affiliated with Oracle. Use at your own risk; you are responsible for your account and its costs.
+  </footer>
+</main>
+</body>
+</html>
