@@ -177,6 +177,8 @@ def main():
               "  You probably pasted another key; upload the one shown above.")
 
     # 2. What to launch
+    print("\nA few questions now. The value in [brackets] is the suggested answer:\n"
+          "press Enter to accept it, or type a different value and press Enter.")
     print("\nWhat do you want to launch?\n  1) Ampere A1.Flex (ARM, up to 4 OCPU / 24 GB free)\n"
           "  2) AMD E2.1.Micro (1/8 OCPU, 1 GB, up to 2 free)")
     arm = ask("Choose", "1", lambda a: None if a in ("1", "2") else "type 1 or 2") == "1"
