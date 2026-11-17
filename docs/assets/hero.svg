@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 350" width="880" height="350" role="img"
+     aria-label="oci-out-of-host-capacity-fix: your PC asks Oracle for a free A1 instance every 60 seconds, an Always Free guard blocks anything that would cost money, Oracle answers Out of host capacity until a slot opens, and then a pop-up says how long it took and how many attempts it needed.">
+  <title>oci-out-of-host-capacity-fix: retry until your free Oracle ARM instance exists</title>
+  <defs>
+    <!-- Palette: background #141418, panel #1f1f25, line #33333b, text #ececea, muted #9a9993,
+         accent (coral) #ff7a5c, success #5fd38d. Dark in both GitHub themes on purpose. -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#ffffff" stroke-opacity="0.035"/>
+    </pattern>
+    <radialGradient id="glow" cx="88%" cy="10%" r="60%">
+      <stop offset="0%" stop-color="#ff7a5c" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ff7a5c" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#9a9993"/>
+    </marker>
+    <marker id="arrowAccent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#ff7a5c"/>
+    </marker>
+    <marker id="arrowOk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#5fd38d"/>
+    </marker>
+  </defs>
+
+  <rect width="880" height="350" rx="16" fill="#141418"/>
+  <rect width="880" height="350" rx="16" fill="url(#grid)"/>
+  <rect width="880" height="350" rx="16" fill="url(#glow)"/>
+
+  <g font-family="Segoe UI, system-ui, -apple-system, Helvetica, Arial, sans-serif">
+    <text x="40" y="50" fill="#ff7a5c" font-size="12" font-weight="700" letter-spacing="2.2">ORACLE CLOUD · ALWAYS FREE</text>
+    <text x="40" y="88" fill="#ececea" font-size="30" font-weight="800">oci-out-of-host-capacity-fix</text>
+    <text x="40" y="116" fill="#9a9993" font-size="15">Keeps asking Oracle until your free ARM server (4 OCPU · 24 GB) exists.</text>
+
+    <!-- 1. your PC -->
+    <rect x="40" y="170" width="150" height="86" rx="12" fill="#1f1f25" stroke="#33333b"/>
+    <text x="115" y="198" fill="#ececea" font-size="14" font-weight="700" text-anchor="middle">Your PC</text>
+    <text x="115" y="220" fill="#9a9993" font-size="12" text-anchor="middle">launcher</text>
+    <text x="115" y="240" fill="#9a9993" font-size="11" text-anchor="middle">Win · Linux · macOS</text>
+
+    <!-- 2. guard -->
+    <rect x="260" y="170" width="140" height="86" rx="12" fill="#1f1f25" stroke="#ff7a5c" stroke-dasharray="5 4"/>
+    <text x="330" y="198" fill="#ececea" font-size="14" font-weight="700" text-anchor="middle">Always Free</text>
+    <text x="330" y="220" fill="#9a9993" font-size="12" text-anchor="middle">≤ 4 OCPU · 24 GB</text>
+    <text x="330" y="240" fill="#9a9993" font-size="12" text-anchor="middle">≤ 200 GB disk</text>
+
+    <!-- 3. Oracle -->
+    <rect x="470" y="170" width="150" height="86" rx="12" fill="#1f1f25" stroke="#33333b"/>
+    <text x="545" y="198" fill="#ececea" font-size="14" font-weight="700" text-anchor="middle">Oracle Cloud</text>
+    <text x="545" y="220" fill="#9a9993" font-size="12" text-anchor="middle">A1.Flex request</text>
+    <text x="545" y="240" fill="#9a9993" font-size="11" text-anchor="middle">rotates AD-1 · 2 · 3</text>
+
+    <!-- forward arrows -->
+    <line x1="190" y1="213" x2="258" y2="213" stroke="#9a9993" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="224" y="204" fill="#9a9993" font-size="11" text-anchor="middle">request</text>
+    <line x1="400" y1="213" x2="468" y2="213" stroke="#9a9993" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="434" y="204" fill="#9a9993" font-size="11" text-anchor="middle">if free</text>
+
+    <!-- retry loop -->
+    <path d="M545 256V292H115V258" fill="none" stroke="#ff7a5c" stroke-width="1.5" stroke-dasharray="6 5" marker-end="url(#arrowAccent)"/>
+    <text x="330" y="314" fill="#ff7a5c" font-size="12" text-anchor="middle" font-family="Consolas, ui-monospace, monospace">500 · "Out of host capacity" → wait 60 s, try again</text>
+
+    <!-- success -->
+    <line x1="620" y1="213" x2="664" y2="213" stroke="#5fd38d" stroke-width="1.5" marker-end="url(#arrowOk)"/>
+    <text x="642" y="204" fill="#5fd38d" font-size="11" text-anchor="middle">room!</text>
+    <rect x="666" y="160" width="184" height="108" rx="12" fill="#1f1f25" stroke="#5fd38d"/>
+    <circle cx="688" cy="184" r="9" fill="#5fd38d"/>
+    <path d="M683.5 184.5l3 3 6-6" fill="none" stroke="#141418" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="704" y="189" fill="#ececea" font-size="13" font-weight="700">Instance created</text>
+    <g font-family="Consolas, ui-monospace, monospace" font-size="11.5" fill="#9a9993">
+      <text x="680" y="216">Got it after &lt;h&gt;h &lt;m&gt;m</text>
+      <text x="680" y="234">and &lt;N&gt; attempts.</text>
+      <text x="680" y="254" fill="#5fd38d">RUNNING · A1.Flex</text>
+    </g>
+  </g>
+</svg>

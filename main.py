@@ -341,7 +341,24 @@ def announce_instance(settings, instance, title="OCI instance created", summary=
             send_email(title.upper(), generate_html_body(instance), settings.email, settings.email_password)
         except (smtplib.SMTPException, OSError) as err:
             log.error("Email notification failed: %s", err)
-    notify(settings, title, body + "The public IP is in the OCI console (Compute > Instances).")
+    notify(settings, title, body + "The public IP is in the OCI console (Compute > Instances)."
+           + next_steps(settings, instance))
+
+
+def next_steps(settings, instance):
+    """Upper-case reminders (pop-ups have no bold) for what to do after success."""
+    steps = []
+    if sys.platform == "win32":
+        steps.append("TURN OFF THE WINDOWS AUTOSTART TASK, IF YOU CREATED IT:\n"
+                     "   powershell -ExecutionPolicy Bypass -File start_windows.ps1 remove-autostart")
+    size = getattr(instance, "shape_config", None)
+    if (instance.shape == ARM_SHAPE and size is not None
+            and (size.ocpus < settings.resize_ocpus or size.memory_in_gbs < settings.resize_memory_gb)):
+        steps.append(f"GROW IT TO {settings.resize_ocpus:g} OCPU / {settings.resize_memory_gb:g} GB "
+                     "(THE INSTANCE REBOOTS):\n   python main.py resize")
+    if not steps:
+        return ""
+    return "\n\nNEXT STEPS:\n" + "\n".join(f"{n}. {s}" for n, s in enumerate(steps, 1))
 
 
 def notify_on_failure(settings, failure_msg):

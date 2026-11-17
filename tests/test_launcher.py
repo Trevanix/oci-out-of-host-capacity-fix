@@ -240,6 +240,14 @@ class LaunchTest(InTempDir):
         with mock.patch.object(main.json, "loads", return_value={k: "" for k in main.IMAGE_LIST_KEYS}):
             self.assertEqual(main.find_image(settings(), fake, "t"), "new")
 
+    def test_next_steps_reminders(self):
+        with mock.patch.object(main.sys, "platform", "win32"):
+            text = main.next_steps(settings(), inst(ocpus=2, mem=12))
+        self.assertIn("REMOVE-AUTOSTART", text.upper())
+        self.assertIn("python main.py resize", text)
+        with mock.patch.object(main.sys, "platform", "linux"):
+            self.assertEqual(main.next_steps(settings(), inst(ocpus=4, mem=24)), "")
+
     def test_elapsed_summary(self):
         self.assertEqual(main.elapsed_summary(100, 791, now=100 + 13 * 3600 + 27 * 60 + 59),
                          "Got it after 13h 27m and 791 attempts.")

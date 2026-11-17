@@ -1,13 +1,99 @@
-# oci-out-of-host-capacity-fix — Oracle Cloud Free Tier ARM instance auto-creator
+<div align="center">
+
+<img src="docs/assets/hero.svg" alt="oci-out-of-host-capacity-fix: your PC asks Oracle for a free A1 instance every 60 seconds, an Always Free guard blocks anything that would cost money, Oracle answers Out of host capacity until a slot opens, and then a pop-up says how long it took and how many attempts it needed." width="880">
+
+<p>
+  <a href="https://github.com/northbit-labs/oci-out-of-host-capacity-fix/actions/workflows/tests.yml"><img src="https://github.com/northbit-labs/oci-out-of-host-capacity-fix/actions/workflows/tests.yml/badge.svg" alt="tests"></a>
+  <a href="https://github.com/northbit-labs/oci-out-of-host-capacity-fix/stargazers"><img src="https://img.shields.io/github/stars/northbit-labs/oci-out-of-host-capacity-fix?style=flat&color=ff7a5c&labelColor=141418&label=stars" alt="GitHub stars"></a>
+  <img src="https://img.shields.io/badge/python-3.11%20%C2%B7%203.12%20%C2%B7%203.13-ff7a5c?labelColor=141418" alt="Python 3.11, 3.12, 3.13">
+  <img src="https://img.shields.io/badge/runs%20on-Windows%20%C2%B7%20Linux%20%C2%B7%20macOS-ff7a5c?labelColor=141418" alt="Windows, Linux, macOS">
+  <img src="https://img.shields.io/badge/cost-%240%20%C2%B7%20Always%20Free%20only-5fd38d?labelColor=141418" alt="Only Always Free resources">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-9a9993?labelColor=141418" alt="MIT license"></a>
+</p>
+
+<p>
+  <b><a href="#start-here">Start here</a></b> ·
+  <a href="#run-it-with-an-ai-agent">AI agents</a> ·
+  <a href="#start-automatically-when-the-pc-turns-on">Autostart</a> ·
+  <a href="#faq">FAQ</a> ·
+  <a href="TROUBLESHOOTING.md">Troubleshooting</a> ·
+  <a href="https://northbit-labs.github.io/oci-out-of-host-capacity-fix/">Website</a> ·
+  <a href="#español">Español</a>
+</p>
+
+</div>
 
 Get an Oracle Cloud **Always Free** server — a free ARM VPS (Ampere A1, up to 4 OCPU / 24 GB RAM, or AMD E2.1.Micro)
 when the console only says **"Out of host capacity"**. The launcher retries for you, every minute,
-until Oracle has room — on **Windows, Linux or macOS** — and pops up a message when it succeeds.
+until Oracle has room — on **Windows, Linux or macOS** — and pops up a message when it succeeds, with how long it
+took and how many attempts it needed. It refuses anything that would leave Always Free, so it never costs you money.
 
 > Fork of [mohankumarpaluru/oracle-freetier-instance-creation](https://github.com/mohankumarpaluru/oracle-freetier-instance-creation)
 > (MIT, © 2023 Mohan Kumar Paluru). Thank you for the original work!
 
-**[Website](https://northbit-labs.github.io/oci-out-of-host-capacity-fix/)** · **[Español más abajo](#español)**
+## Start here
+
+| I want to… | Go to |
+|---|---|
+| Do it myself on **Windows** | [Quick start — Windows](#quick-start--windows) |
+| Do it myself on **Linux / macOS** | [Quick start — Linux / macOS](#quick-start--linux--macos) |
+| Let an **AI coding agent** guide me | [Run it with an AI agent](#run-it-with-an-ai-agent) |
+| Keep it trying **after reboots** | [Start automatically when the PC turns on](#start-automatically-when-the-pc-turns-on) |
+
+## Run it with an AI agent
+
+The repo ships [`AGENTS.md`](AGENTS.md), a step-by-step guide written for AI coding agents: what to install,
+how to run the wizard, what to ask you to do in the Oracle console, and what never to touch (your keys, or anything
+outside Always Free). Open the folder in your agent and say:
+
+```text
+Read AGENTS.md and help me get my free Oracle Cloud instance, step by step.
+```
+
+| Agent | How it finds the guide |
+|---|---|
+| Claude Code | automatically (`CLAUDE.md` imports `AGENTS.md`) |
+| Gemini CLI | automatically (`GEMINI.md` imports `AGENTS.md`) |
+| OpenAI Codex CLI | automatically (`AGENTS.md`) |
+| Cursor | automatically (`AGENTS.md`) |
+| GitHub Copilot (VS Code agent mode, coding agent) | automatically (`AGENTS.md`) |
+| OpenCode | automatically (`AGENTS.md`) |
+| Windsurf, Cline, Aider, Goose, Kiro, Continue, others | tell it: *"Read AGENTS.md first"* |
+
+The agent can install, configure and start everything, but **you** sign in to Oracle and paste back what the console
+shows: no agent should ever ask for your Oracle password.
+
+## Start automatically when the PC turns on
+
+The launcher only works while it runs. To make it start again by itself after a reboot:
+
+**Windows**: creates a scheduled task that starts now and at every log-in (one copy at a time):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File start_windows.ps1 autostart
+```
+
+When the pop-up says the instance is ready, remove it (the pop-up reminds you):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File start_windows.ps1 remove-autostart
+```
+
+**Linux / macOS**: add a line to your crontab (`crontab -e`), adjusting the folder:
+
+```bash
+@reboot cd ~/oci-out-of-host-capacity-fix && .venv/bin/python main.py >> python_error.log 2>&1
+```
+
+Delete that line after success.
+
+## When to use · when to skip
+
+**Use it** when the console keeps saying "Out of host capacity" for the free A1 shape, or you want to grow a 2/12
+instance to 4/24 later without babysitting the console.
+
+**Skip it** if your region already lets you create the instance from the console (just do that), or if you need a
+paid shape: this tool only requests Always Free resources, on purpose.
 
 ## What's new compared to the original
 
@@ -23,6 +109,8 @@ until Oracle has room — on **Windows, Linux or macOS** — and pops up a messa
 | Dry run | — | `python main.py check` (read-only) |
 | Notifications | Gmail, Discord (Telegram only in the bash wrapper) | + desktop pop-up (Windows always-on-top, Linux `notify-send`, macOS), Telegram in Python; says how long it took and how many attempts |
 | Tests | — | offline unit tests with mocks |
+| Keeps going after reboots | — | `start_windows.ps1 autostart` (Windows task) or a `@reboot` cron line |
+| AI agents | — | [`AGENTS.md`](AGENTS.md) guide for Claude Code, Codex, Gemini CLI, Cursor, Copilot and others |
 
 ## Requirements
 
@@ -46,6 +134,7 @@ until Oracle has room — on **Windows, Linux or macOS** — and pops up a messa
    ```
    It first runs `main.py check`, then keeps trying without a console window. You can close PowerShell.
    Follow it with `Get-Content launch_instance.log -Wait -Tail 5`; stop it with `Stop-Process -Id <PID>`.
+   To keep it trying after reboots use `start_windows.ps1 autostart` ([details](#start-automatically-when-the-pc-turns-on)).
 
 ## Quick start — Linux / macOS
 
@@ -235,6 +324,21 @@ Basado en [mohankumarpaluru/oracle-freetier-instance-creation](https://github.co
    Para pararlo: `Stop-Process -Id <PID>` (el PID se muestra al arrancar).
 7. Cuando salga la ventana de aviso, busca la IP pública en la consola (Compute → Instancias) y entra con
    `ssh -i ssh_key ubuntu@<IP>`.
+
+### Con un agente de IA
+
+Abre la carpeta en Claude Code, Codex, Gemini CLI, Cursor, GitHub Copilot, OpenCode u otro agente y dile:
+*"Lee AGENTS.md y ayúdame a conseguir mi instancia gratis de Oracle Cloud, paso a paso."*
+El agente instala y configura todo; tú inicias sesión en Oracle y le pegas lo que muestra la consola.
+Ningún agente debería pedirte tu contraseña de Oracle.
+
+### Arranque automático al encender la PC
+
+En Windows, para que siga intentando después de reiniciar:
+`powershell -ExecutionPolicy Bypass -File start_windows.ps1 autostart`.
+Cuando salga el aviso de que está lista, quita la tarea con `start_windows.ps1 remove-autostart` (el aviso te lo recuerda).
+En Linux/macOS: añade `@reboot cd ~/oci-out-of-host-capacity-fix && .venv/bin/python main.py >> python_error.log 2>&1`
+con `crontab -e` y bórralo al terminar.
 
 Consejo: una instancia de 2 OCPU / 12 GB suele salir antes que una de 4/24. Consigue esa y luego ejecuta
 `start_windows.ps1 resize` (la instancia se reinicia).
