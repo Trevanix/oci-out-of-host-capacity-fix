@@ -21,7 +21,7 @@ until Oracle has room — on **Windows, Linux or macOS** — and pops up a messa
 | Paths with spaces | rejected | fine (`C:/Users/Jane Doe/...`) |
 | Safety | — | refuses anything that would leave Always Free (OCPU, RAM, 2 micros, 200 GB storage) |
 | Dry run | — | `python main.py check` (read-only) |
-| Notifications | Gmail, Discord (Telegram only in the bash wrapper) | + desktop pop-up (Windows always-on-top, Linux `notify-send`, macOS), Telegram in Python |
+| Notifications | Gmail, Discord (Telegram only in the bash wrapper) | + desktop pop-up (Windows always-on-top, Linux `notify-send`, macOS), Telegram in Python; says how long it took and how many attempts |
 | Tests | — | offline unit tests with mocks |
 
 ## Requirements
@@ -151,6 +151,13 @@ using `resize` later usually gets you a server sooner.
 No, that is the normal answer while Oracle has
 no room. The launcher keeps going. Busy regions can take days.
 
+### How long did it take for others?
+
+When it succeeds, the notification says how long it took and how many attempts it needed, in the form
+`Got it after <hours>h <minutes>m and <N> attempts.` (counted since the launcher started). If you get one, a screenshot of it
+with your region in an [issue](https://github.com/northbit-labs/oci-out-of-host-capacity-fix/issues) helps others
+know what to expect.
+
 ### `LimitExceeded`?
 
 You already have something using the quota. The launcher checks whether your instance was
@@ -184,7 +191,7 @@ Not affiliated with Oracle. Use at your own risk; you are responsible for your a
 
 Consigue un servidor **Always Free** de Oracle Cloud — un VPS ARM gratis (Ampere A1, hasta 4 OCPU / 24 GB de RAM, o AMD
 E2.1.Micro) cuando la consola solo responde **"Out of host capacity"**. El programa reintenta por ti cada
-minuto hasta que Oracle tenga hueco — en **Windows, Linux o macOS** — y te avisa con una ventana cuando lo consigue.
+minuto hasta que Oracle tenga hueco — en **Windows, Linux o macOS** — y te avisa con una ventana cuando lo consigue, indicando cuánto tardó y cuántos intentos hizo.
 
 Basado en [mohankumarpaluru/oracle-freetier-instance-creation](https://github.com/mohankumarpaluru/oracle-freetier-instance-creation) (MIT).
 

@@ -206,6 +206,12 @@ class LaunchTest(InTempDir):
         self.assertEqual(details.create_vnic_details.subnet_id, "sub")
         self.assertIn("OCI instance created", notify.call_args[0][1])
         self.assertIn("Shape: VM.Standard.A1.Flex", Path("INSTANCE_CREATED").read_text())
+        self.assertIn("and 3 attempts.", notify.call_args[0][2])
+
+    def test_elapsed_summary(self):
+        self.assertEqual(main.elapsed_summary(100, 791, now=100 + 13 * 3600 + 27 * 60 + 59),
+                         "Got it after 13h 27m and 791 attempts.")
+        self.assertEqual(main.elapsed_summary(0, 1, now=125), "Got it after 0h 02m and 1 attempt.")
 
     def test_existing_instance_stops_immediately(self):
         fake = FakeOci([[inst()]])

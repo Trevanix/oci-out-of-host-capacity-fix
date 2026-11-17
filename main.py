@@ -318,8 +318,16 @@ def generate_html_body(instance):
     return html
 
 
-def announce_instance(settings, instance, title="OCI instance created"):
-    body = "\n".join([f"Instance ID: {instance.id}",
+def elapsed_summary(start, attempts, now=None):
+    """'Got it after 13h 27m and 791 attempts.' start is a time.monotonic() value."""
+    minutes = int(((time.monotonic() if now is None else now) - start) // 60)
+    hours, minutes = divmod(minutes, 60)
+    return f"Got it after {hours}h {minutes:02d}m and {attempts} attempt{'' if attempts == 1 else 's'}."
+
+
+def announce_instance(settings, instance, title="OCI instance created", summary=""):
+    body = "\n".join(([summary, ""] if summary else []) + [
+                      f"Instance ID: {instance.id}",
                       f"Display Name: {instance.display_name}",
                       f"Availability Domain: {instance.availability_domain}",
                       f"Shape: {instance.shape}",
@@ -357,13 +365,13 @@ def find_existing(settings, instances, states=("RUNNING", "PROVISIONING")):
     return matching[-1] if len(matching) >= wanted else None
 
 
-def check_instance_state_and_write(settings, clients, compartment_id, tries=3):
+def check_instance_state_and_write(settings, clients, compartment_id, tries=3, summary=""):
     """Look for the instance up to `tries` times (60 s apart); announce it when found."""
     for attempt in range(tries):
         instances = execute_oci_command(clients.compute, "list_instances", compartment_id=compartment_id)
         found = find_existing(settings, instances)
         if found:
-            announce_instance(settings, found)
+            announce_instance(settings, found, summary=summary)
             return True
         if attempt < tries - 1:
             time.sleep(60)
@@ -473,18 +481,22 @@ def launch_instance(settings, clients, tenancy):
     logging.info("OCI_IMAGE_ID: %s", image_id)
     ssh_public_key = read_or_generate_ssh_public_key(settings.ssh_key_file)
 
+    start, attempts = time.monotonic(), 0
     while True:
+        attempts += 1
         try:
             response = clients.compute.launch_instance(launch_instance_details=launch_details(
                 settings, next(ad_cycle), tenancy, subnet_id, image_id, ssh_public_key))
             if response.status == 200:
                 log.info("Command: launch_instance\nOutput: %s", response)
-                if check_instance_state_and_write(settings, clients, tenancy):
+                if check_instance_state_and_write(settings, clients, tenancy,
+                                                  summary=elapsed_summary(start, attempts)):
                     return
         except oci.exceptions.ServiceError as err:
             if err.code == "LimitExceeded":
                 log.info("LimitExceeded, checking whether the instance was created: %s", err.message)
-                if check_instance_state_and_write(settings, clients, tenancy):
+                if check_instance_state_and_write(settings, clients, tenancy,
+                                                  summary=elapsed_summary(start, attempts)):
                     return
             handle_errors("launch_instance", _error_data(err))
         except oci.exceptions.RequestException as err:
