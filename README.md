@@ -272,7 +272,7 @@ All OCI calls are mocked; the tests never touch a real account.
 - [hitrov/oci-arm-host-capacity](https://github.com/hitrov/oci-arm-host-capacity) — the idea that started it all.
 - Oracle docs: [LaunchInstance](https://docs.oracle.com/en-us/iaas/api/#/en/iaas/20160918/Instance/LaunchInstance), [UpdateInstance](https://docs.oracle.com/en-us/iaas/api/#/en/iaas/20160918/Instance/UpdateInstance).
 
-Made by [Trevanix](https://github.com/trevanix). Questions: [contacto@trevanix.com](mailto:contacto@trevanix.com) · security reports: [security policy](https://github.com/trevanix/.github/blob/main/SECURITY.md).
+Made by [Trevanix](https://github.com/trevanix). Questions: [contact@trevanix.com](mailto:contact@trevanix.com) · security reports: [security policy](https://github.com/trevanix/.github/blob/main/SECURITY.md).
 
 Not affiliated with Oracle. Use at your own risk; you are responsible for your account and its costs.
 
@@ -358,6 +358,6 @@ Consejo: una instancia de 2 OCPU / 12 GB suele salir antes que una de 4/24. Cons
 
 Consulta siempre la página oficial de [recursos Always Free](https://docs.oracle.com/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm).
 
-Hecho por [Trevanix](https://github.com/trevanix). Preguntas: [contacto@trevanix.com](mailto:contacto@trevanix.com) · fallos de seguridad: [política de seguridad](https://github.com/trevanix/.github/blob/main/SECURITY.md).
+Hecho por [Trevanix](https://github.com/trevanix). Preguntas: [contact@trevanix.com](mailto:contact@trevanix.com) · fallos de seguridad: [política de seguridad](https://github.com/trevanix/.github/blob/main/SECURITY.md).
 
 No está afiliado a Oracle. Úsalo bajo tu responsabilidad.
