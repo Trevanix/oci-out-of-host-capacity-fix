@@ -3,7 +3,7 @@
 <img src="docs/assets/hero.svg" alt="oci-out-of-host-capacity-fix: your PC asks Oracle for a free A1 instance every 60 seconds, an Always Free guard blocks anything that would cost money, Oracle answers Out of host capacity until a slot opens, and then a pop-up says how long it took and how many attempts it needed." width="880">
 
 <p>
-  <a href="https://github.com/northbit-labs/oci-out-of-host-capacity-fix/actions/workflows/tests.yml"><img src="https://github.com/northbit-labs/oci-out-of-host-capacity-fix/actions/workflows/tests.yml/badge.svg" alt="tests"></a>
+  <a href="https://github.com/trevanix/oci-out-of-host-capacity-fix/actions/workflows/tests.yml"><img src="https://github.com/trevanix/oci-out-of-host-capacity-fix/actions/workflows/tests.yml/badge.svg" alt="tests"></a>
   <img src="https://img.shields.io/badge/python-3.11%20%C2%B7%203.12%20%C2%B7%203.13-ff7a5c?labelColor=141418" alt="Python 3.11, 3.12, 3.13">
   <img src="https://img.shields.io/badge/runs%20on-Windows%20%C2%B7%20Linux%20%C2%B7%20macOS-ff7a5c?labelColor=141418" alt="Windows, Linux, macOS">
   <img src="https://img.shields.io/badge/cost-%240%20%C2%B7%20Always%20Free%20only-5fd38d?labelColor=141418" alt="Only Always Free resources">
@@ -16,7 +16,7 @@
   <a href="#start-automatically-when-the-pc-turns-on">Autostart</a> ·
   <a href="#faq">FAQ</a> ·
   <a href="TROUBLESHOOTING.md">Troubleshooting</a> ·
-  <a href="https://northbit-labs.github.io/oci-out-of-host-capacity-fix/">Website</a> ·
+  <a href="https://trevanix.github.io/oci-out-of-host-capacity-fix/">Website</a> ·
   <a href="#español">Español</a>
 </p>
 
@@ -138,7 +138,7 @@ paid shape: this tool only requests Always Free resources, on purpose.
 ## Quick start — Linux / macOS
 
 ```bash
-git clone https://github.com/northbit-labs/oci-out-of-host-capacity-fix && cd oci-out-of-host-capacity-fix
+git clone https://github.com/trevanix/oci-out-of-host-capacity-fix && cd oci-out-of-host-capacity-fix
 python3.12 -m venv .venv && . .venv/bin/activate
 pip install -r requirements.txt
 python setup_wizard.py
@@ -243,7 +243,7 @@ no room. The launcher keeps going. Busy regions can take days.
 
 When it succeeds, the notification says how long it took and how many attempts it needed, in the form
 `Got it after <hours>h <minutes>m and <N> attempts.` (counted since the launcher started). If you get one, a screenshot of it
-with your region in an [issue](https://github.com/northbit-labs/oci-out-of-host-capacity-fix/issues) helps others
+with your region in an [issue](https://github.com/trevanix/oci-out-of-host-capacity-fix/issues) helps others
 know what to expect.
 
 ### `LimitExceeded`?
@@ -271,6 +271,8 @@ All OCI calls are mocked; the tests never touch a real account.
 - [mohankumarpaluru/oracle-freetier-instance-creation](https://github.com/mohankumarpaluru/oracle-freetier-instance-creation) — the original project this is based on.
 - [hitrov/oci-arm-host-capacity](https://github.com/hitrov/oci-arm-host-capacity) — the idea that started it all.
 - Oracle docs: [LaunchInstance](https://docs.oracle.com/en-us/iaas/api/#/en/iaas/20160918/Instance/LaunchInstance), [UpdateInstance](https://docs.oracle.com/en-us/iaas/api/#/en/iaas/20160918/Instance/UpdateInstance).
+
+Made by [Trevanix](https://github.com/trevanix). Questions: [contacto@trevanix.com](mailto:contacto@trevanix.com) · security reports: [security policy](https://github.com/trevanix/.github/blob/main/SECURITY.md).
 
 Not affiliated with Oracle. Use at your own risk; you are responsible for your account and its costs.
 
@@ -355,5 +357,7 @@ Consejo: una instancia de 2 OCPU / 12 GB suele salir antes que una de 4/24. Cons
 - En cuentas Free Tier, Oracle puede **recuperar instancias inactivas** (uso muy bajo durante 7 días).
 
 Consulta siempre la página oficial de [recursos Always Free](https://docs.oracle.com/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm).
+
+Hecho por [Trevanix](https://github.com/trevanix). Preguntas: [contacto@trevanix.com](mailto:contacto@trevanix.com) · fallos de seguridad: [política de seguridad](https://github.com/trevanix/.github/blob/main/SECURITY.md).
 
 No está afiliado a Oracle. Úsalo bajo tu responsabilidad.
