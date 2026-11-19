@@ -3,8 +3,9 @@
 #   powershell -ExecutionPolicy Bypass -File start_windows.ps1 resize             # grow A1 to 4/24
 #   powershell -ExecutionPolicy Bypass -File start_windows.ps1 autostart          # launch now + every time you log in
 #   powershell -ExecutionPolicy Bypass -File start_windows.ps1 remove-autostart   # undo autostart (do it after success)
+#   powershell -ExecutionPolicy Bypass -File start_windows.ps1 shortcut           # desktop shortcut that starts it
 # Progress: tray icon (green = OK, yellow = problem) and launch_instance.log. Stop: Stop-Process -Id <the PID printed below>
-param([ValidateSet("launch", "resize", "autostart", "remove-autostart")][string]$Command = "launch")
+param([ValidateSet("launch", "resize", "autostart", "remove-autostart", "shortcut")][string]$Command = "launch")
 $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot
 $TaskName = "OCI free instance launcher"
@@ -15,9 +16,34 @@ function Start-Tray {  # the tray script exits by itself if an icon is already s
     Start-Process powershell.exe -ArgumentList $TrayArgs -WindowStyle Hidden
 }
 
+function Get-Launcher {
+    Get-CimInstance Win32_Process -Filter "Name like 'python%'" |
+        Where-Object { $_.CommandLine -match 'main\.py (launch|resize)' } | Select-Object -First 1
+}
+
+if ($Command -eq "shortcut") {
+    $link = Join-Path ([Environment]::GetFolderPath("Desktop")) "OCI free launcher.lnk"
+    $s = (New-Object -ComObject WScript.Shell).CreateShortcut($link)
+    $s.TargetPath = "powershell.exe"
+    $s.Arguments = "-NoProfile -NoExit -ExecutionPolicy Bypass -File `"$PSScriptRoot\start_windows.ps1`""
+    $s.WorkingDirectory = $PSScriptRoot
+    $s.IconLocation = "$env:SystemRoot\System32\imageres.dll,73"
+    $s.Description = "Start the Oracle Always Free launcher (or show its tray icon if it is already running)"
+    $s.Save()
+    Write-Host "Shortcut created: $link"
+    exit 0
+}
+
 if ($Command -eq "remove-autostart") {
     foreach ($t in $TaskName, $TrayTask) { Unregister-ScheduledTask -TaskName $t -Confirm:$false -ErrorAction SilentlyContinue }
     Write-Host "Autostart removed. A launcher that is already running keeps running until it succeeds or you stop it."
+    exit 0
+}
+
+if ($Command -eq "launch" -and ($running = Get-Launcher)) {
+    # a second copy would only double the requests and earn more TooManyRequests
+    Start-Tray
+    Write-Host "The launcher is already running (PID $($running.ProcessId)). Look for the tray icon next to the clock."
     exit 0
 }
 

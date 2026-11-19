@@ -136,6 +136,8 @@ paid shape: this tool only requests Always Free resources, on purpose.
    A **tray icon** next to the clock shows how it is doing: 🟢 green = running and trying, 🟡 yellow = not running,
    no attempt for a few minutes (PC asleep?) or stopped with an error, ✅ green check = instance created.
    Hover it for details; double-click opens the log.
+   Want a desktop shortcut that starts it (or brings the icon back if it is already running)?
+   `powershell -ExecutionPolicy Bypass -File start_windows.ps1 shortcut`
    Follow it with `Get-Content launch_instance.log -Wait -Tail 5`; stop it with `Stop-Process -Id <PID>`.
    To keep it trying after reboots use `start_windows.ps1 autostart` ([details](#start-automatically-when-the-pc-turns-on)).
 
@@ -328,6 +330,8 @@ Basado en [mohankumarpaluru/oracle-freetier-instance-creation](https://github.co
    Puedes cerrar PowerShell. Junto al reloj aparece un **ícono**: 🟢 verde = funcionando, 🟡 amarillo = no está
    corriendo, lleva unos minutos sin intentar (¿PC suspendida?) o se detuvo con un error, ✅ = instancia creada.
    Para ver el detalle: `Get-Content launch_instance.log -Wait -Tail 5` o doble clic en el ícono.
+   Para tener un acceso directo en el escritorio: `powershell -ExecutionPolicy Bypass -File start_windows.ps1 shortcut`
+   (si ya está corriendo, no abre otra copia: solo vuelve a mostrar el ícono).
    Para pararlo: `Stop-Process -Id <PID>` (el PID se muestra al arrancar).
 7. Cuando salga la ventana de aviso, busca la IP pública en la consola (Compute → Instancias) y entra con
    `ssh -i ssh_key ubuntu@<IP>`.
