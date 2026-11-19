@@ -32,7 +32,8 @@ If the person is changing the code instead of setting it up, skip the setup guid
    - Windows, keep trying across reboots: `powershell -ExecutionPolicy Bypass -File start_windows.ps1 autostart`
    - Windows, only now: `powershell -ExecutionPolicy Bypass -File start_windows.ps1`
    - Linux/macOS: `nohup python main.py > python_error.log 2>&1 &` (for reboots, see "Start automatically" in README.md).
-5. **Wait**: "Out of host capacity" in `launch_instance.log` is normal; it retries every minute and can take hours or days.
+5. **Wait**: on Windows a tray icon shows the state (green = trying, yellow = problem, check = created).
+   "Out of host capacity" in `launch_instance.log` is normal; it retries every minute and can take hours or days.
    When it succeeds a pop-up says how long it took and how many attempts it needed.
 6. **After success**: Windows autostart → `start_windows.ps1 remove-autostart`. Optional: `python main.py resize`
    grows a 2/12 instance to 4/24 (the instance reboots).

@@ -179,7 +179,8 @@ def handle_errors(command, data):
     """Sleep and return True for temporary errors (capacity, throttling, network); raise otherwise."""
     if is_retryable(data):
         log.info("Command: %s--\nOutput: %s", command, data)
-        time.sleep(WAIT_TIME)
+        # Oracle throttles launches per tenancy; hitting it again a minute later just wastes the request
+        time.sleep(WAIT_TIME * (2 if data.get("code") == "TooManyRequests" else 1))
         return True
     raise Exception("Error: %s" % data)
 

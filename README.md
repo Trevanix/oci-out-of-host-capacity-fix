@@ -66,7 +66,7 @@ shows: no agent should ever ask for your Oracle password.
 
 The launcher only works while it runs. To make it start again by itself after a reboot:
 
-**Windows**: creates a scheduled task that starts now and at every log-in (one copy at a time):
+**Windows**: creates scheduled tasks that start the launcher and its tray icon now and at every log-in (one copy at a time):
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File start_windows.ps1 autostart
@@ -108,6 +108,7 @@ paid shape: this tool only requests Always Free resources, on purpose.
 | Dry run | — | `python main.py check` (read-only) |
 | Notifications | Gmail, Discord (Telegram only in the bash wrapper) | + desktop pop-up (Windows always-on-top, Linux `notify-send`, macOS), Telegram in Python; says how long it took and how many attempts |
 | Tests | — | offline unit tests with mocks |
+| Status at a glance | — | Windows tray icon: green = trying, yellow = problem, check = created |
 | Keeps going after reboots | — | `start_windows.ps1 autostart` (Windows task) or a `@reboot` cron line |
 | AI agents | — | [`AGENTS.md`](AGENTS.md) guide for Claude Code, Codex, Gemini CLI, Cursor, Copilot and others |
 
@@ -132,6 +133,9 @@ paid shape: this tool only requests Always Free resources, on purpose.
    powershell -ExecutionPolicy Bypass -File start_windows.ps1
    ```
    It first runs `main.py check`, then keeps trying without a console window. You can close PowerShell.
+   A **tray icon** next to the clock shows how it is doing: 🟢 green = running and trying, 🟡 yellow = not running,
+   no attempt for a few minutes (PC asleep?) or stopped with an error, ✅ green check = instance created.
+   Hover it for details; double-click opens the log.
    Follow it with `Get-Content launch_instance.log -Wait -Tail 5`; stop it with `Stop-Process -Id <PID>`.
    To keep it trying after reboots use `start_windows.ps1 autostart` ([details](#start-automatically-when-the-pc-turns-on)).
 
@@ -206,7 +210,7 @@ See [`oci.env.example`](oci.env.example) for all of them. The important ones:
 | `OCI_SUBNET_ID` | empty | Empty = first public subnet, or create one if `CREATE_NETWORK=True`. |
 | `ASSIGN_PUBLIC_IP` | `True` | Needed to SSH from home. |
 | `OS_VERSION` | `22.04` | Ubuntu version (`images_list.json` lists what is available). |
-| `REQUEST_WAIT_TIME_SECS` | `60` | Pause between attempts. Below 30 s you will get `TooManyRequests`. |
+| `REQUEST_WAIT_TIME_SECS` | `60` | Pause between attempts (doubled after a `TooManyRequests`). Below 30 s you will get `TooManyRequests`. |
 | `DESKTOP_NOTIFY` | `True` | Pop-up / desktop notification on success or error. |
 | `DISCORD_WEBHOOK`, `TELEGRAM_TOKEN` + `TELEGRAM_USER_ID`, `NOTIFY_EMAIL` + `EMAIL` + `EMAIL_PASSWORD` | empty | Optional extra notifications (Gmail needs an [app password](https://myaccount.google.com/apppasswords)). |
 
@@ -321,7 +325,9 @@ Basado en [mohankumarpaluru/oracle-freetier-instance-creation](https://github.co
    ```powershell
    powershell -ExecutionPolicy Bypass -File start_windows.ps1
    ```
-   Puedes cerrar PowerShell. Para ver cómo va: `Get-Content launch_instance.log -Wait -Tail 5`.
+   Puedes cerrar PowerShell. Junto al reloj aparece un **ícono**: 🟢 verde = funcionando, 🟡 amarillo = no está
+   corriendo, lleva unos minutos sin intentar (¿PC suspendida?) o se detuvo con un error, ✅ = instancia creada.
+   Para ver el detalle: `Get-Content launch_instance.log -Wait -Tail 5` o doble clic en el ícono.
    Para pararlo: `Stop-Process -Id <PID>` (el PID se muestra al arrancar).
 7. Cuando salga la ventana de aviso, busca la IP pública en la consola (Compute → Instancias) y entra con
    `ssh -i ssh_key ubuntu@<IP>`.

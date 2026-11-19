@@ -240,6 +240,12 @@ class LaunchTest(InTempDir):
         with mock.patch.object(main.json, "loads", return_value={k: "" for k in main.IMAGE_LIST_KEYS}):
             self.assertEqual(main.find_image(settings(), fake, "t"), "new")
 
+    def test_too_many_requests_waits_twice_as_long(self):
+        with mock.patch.object(main.time, "sleep") as sleep:
+            main.handle_errors("x", {"status": 429, "code": "TooManyRequests", "message": "Too many requests"})
+            main.handle_errors("x", {"status": 500, "code": "InternalError", "message": "Out of host capacity."})
+        self.assertEqual([c.args[0] for c in sleep.call_args_list], [main.WAIT_TIME * 2, main.WAIT_TIME])
+
     def test_next_steps_reminders(self):
         with mock.patch.object(main.sys, "platform", "win32"):
             text = main.next_steps(settings(), inst(ocpus=2, mem=12))
